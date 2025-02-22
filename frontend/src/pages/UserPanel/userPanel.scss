@@ -1,0 +1,33 @@
+@use "../../common-style.scss";
+ 
+  .edit-button {
+    
+  }
+  
+  .header {
+    color: #fff;
+    margin-bottom: 2rem;
+  }
+
+  .account {
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+    margin: auto;
+    margin-bottom: 20px;
+    background-color: white;
+    padding: 10px;
+  }
+
+  .account__content-wrapper {
+    text-align: left;
+  }
+
+  .account-content-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .account__amount {
+    font-size: 30px;
+  }
