@@ -9,6 +9,32 @@ basePath: /api/v1
 schemes:
   - http
 paths:
+  /comptes/{compteId}/transactions:
+    get:
+      summary: Récupérer les transactions d'un compte
+      description: Retourne toutes les transactions associées à un compte bancaire spécifique.
+      operationId: getTransactionsByCompte
+      parameters:
+        - name: compteId
+          in: path
+          description: L'ID du compte bancaire pour lequel récupérer les transactions.
+          required: true
+          type: string
+          example: "123456789"
+      responses:
+        '200':
+          description: Liste des transactions du compte
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Transaction'
+        '400':
+          description: Mauvaise requête (paramètre invalide)
+        '404':
+          description: Compte non trouvé
+        '500':
+          description: Erreur interne du serveur
+          
   /user/login:
     post:
       tags:
@@ -33,6 +59,7 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
+          
   /user/signup:
     post:
       tags:
@@ -57,6 +84,7 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
+          
   /user/profile:
     get:
       security:
@@ -65,11 +93,9 @@ paths:
         - User Module
       summary: User Profile API
       description: API for fetching a user profile
-      #produces:
-       # - application/json
       responses:
         '200':
-          description: User profile retrieved successully
+          description: User profile retrieved successfully
           schema:
             $ref: '#/definitions/ApiResponse'
         '400':
@@ -94,13 +120,14 @@ paths:
         - application/json
       responses:
         '200':
-          description: User profile retrieved successully
+          description: User profile updated successfully
           schema:
             $ref: '#/definitions/ApiResponse'
         '400':
           description: Invalid Fields
         '500':
           description: Internal Server Error
+          
   /user/transactions:
     get:
       security:
@@ -122,7 +149,8 @@ paths:
           description: Access forbidden
         "500":
           description: Internal Server Error
-  /user/transactions/transactionId:
+          
+  /user/transactions/{transactionId}:
     get:
       security:
         - Bearer: []
@@ -177,37 +205,43 @@ paths:
           description: Access forbidden
         "500":
           description: Internal Server Error
+
 securityDefinitions:
   Bearer:
     type: apiKey
     name: Authorization
     in: header
+
 definitions:
   User:
+    type: object
     properties:
       email:
         type: string
-        description: user email
+        description: User email
       password:
         type: string
-        description: user password
+        description: User password
       firstName:
         type: string
-        description: user first name
+        description: User first name
       lastName:
         type: string
-        description: user last name
+        description: User last name
       userName:
         type: string
-        description: user public name
+        description: User public name
+  
   Login:
+    type: object
     properties:
       email:
         type: string
-        description: user email
+        description: User email
       password:
         type: string
-        description: user password
+        description: User password
+  
   ApiResponse:
     type: object
     properties:
@@ -222,13 +256,44 @@ definitions:
             type: string
           email:
             type: string
+  
   LoginResponse:
     type: object
     properties:
       token:
         type: string
+  
   UserProfile:
     type: object
     properties:
       userName:
         type: string
+      email:
+        type: string
+  
+  Transaction:
+    type: object
+    properties:
+      transactionId:
+        type: string
+      date:
+        type: string
+        format: date
+      type:
+        type: string
+      montant:
+        type: number
+        format: float
+      description:
+        type: string
+
+  AccountTransactions:
+    type: object
+    properties:
+      accountId:
+        type: string
+      transactions:
+        type: array
+        items:
+          $ref: '#/definitions/Transaction'
+
